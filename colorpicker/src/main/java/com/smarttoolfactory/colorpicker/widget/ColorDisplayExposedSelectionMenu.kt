@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuDefaults
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.smarttoolfactory.colorpicker.model.ColorModel
@@ -48,26 +50,26 @@ fun ColorDisplayExposedSelectionMenu(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier =
-        Modifier
-            .background(backgroundColor)
-            .fillMaxWidth()
-            .padding(2.dp)
+            Modifier
+                .background(backgroundColor)
+                .fillMaxWidth()
+                .padding(2.dp)
     ) {
         ExposedSelectionMenu(
             modifier = Modifier.width(100.dp),
             index = selectedIndex,
             textFieldColors =
-            ExposedDropdownMenuDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                focusedLabelColor = textColor,
-                unfocusedLabelColor = textColor,
-                trailingIconColor = textColor,
-                focusedTrailingIconColor = textColor,
-                textColor = textColor
-            ),
+                ExposedDropdownMenuDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    focusedLabelColor = textColor,
+                    unfocusedLabelColor = textColor,
+                    trailingIconColor = textColor,
+                    focusedTrailingIconColor = textColor,
+                    textColor = textColor
+                ),
             dropdownMenuItemColors = dropdownMenuItemColors,
             options = ColorModel.entries.map { it.name },
             onSelected = {
@@ -85,6 +87,23 @@ fun ColorDisplayExposedSelectionMenu(
     }
 }
 
+@Preview
+@Composable
+private fun ColorComponentsDisplayPrev() {
+    Surface {
+        ColorComponentsDisplay(
+            color = Color.Red,
+            colorModel = ColorModel.RGB,
+            textColor = Color.Black
+        )
+    }
+}
+
+private data class ColorComponent(
+    val label: String,
+    val value: String
+)
+
 @Composable
 fun ColorComponentsDisplay(
     color: Color,
@@ -93,94 +112,56 @@ fun ColorComponentsDisplay(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
 ) {
+    val components = remember(color, colorModel) { color.componentsFor(colorModel) }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = horizontalArrangement,
         modifier = modifier
     ) {
-        when (colorModel) {
-            ColorModel.RGB -> {
-                ColorValueColumn(
-                    label = "R",
-                    value = color.red.fractionToRGBString(),
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "G",
-                    value = color.green.fractionToRGBString(),
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "B",
-                    value = color.blue.fractionToRGBString(),
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "A",
-                    value = "${color.alpha.fractionToPercent()}%",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-            }
+        components.forEach { component ->
+            ColorValueColumn(
+                label = component.label,
+                value = component.value,
+                textColor = textColor,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
 
-            ColorModel.HSV -> {
-                val hsvArray = ColorUtil.colorToHSV(color)
-                ColorValueColumn(
-                    label = "H",
-                    value = "${hsvArray[0].round()}°",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "S",
-                    value = "${hsvArray[1].fractionToPercent()}%",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "V",
-                    value = "${hsvArray[2].fractionToPercent()}%",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "A",
-                    value = "${color.alpha.fractionToPercent()}%",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-            }
+private fun Color.componentsFor(colorModel: ColorModel): List<ColorComponent> {
+    val alpha = ColorComponent(
+        label = "A",
+        value = "${alpha.fractionToPercent()}%"
+    )
 
-            ColorModel.HSL -> {
-                val hslArray = ColorUtil.colorToHSL(color)
-                ColorValueColumn(
-                    label = "H",
-                    value = "${hslArray[0].round()}°",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "S",
-                    value = "${hslArray[1].fractionToPercent()}%",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "L",
-                    value = "${hslArray[2].fractionToPercent()}%",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-                ColorValueColumn(
-                    label = "A",
-                    value = "${color.alpha.fractionToPercent()}%",
-                    modifier = Modifier.weight(1f),
-                    textColor = textColor
-                )
-            }
+    return when (colorModel) {
+        ColorModel.RGB -> listOf(
+            ColorComponent("R", red.fractionToRGBString()),
+            ColorComponent("G", green.fractionToRGBString()),
+            ColorComponent("B", blue.fractionToRGBString()),
+            alpha
+        )
+
+        ColorModel.HSV -> {
+            val hsv = ColorUtil.colorToHSV(this)
+            listOf(
+                ColorComponent("H", "${hsv[0].round()}°"),
+                ColorComponent("S", "${hsv[1].fractionToPercent()}%"),
+                ColorComponent("V", "${hsv[2].fractionToPercent()}%"),
+                alpha
+            )
+        }
+
+        ColorModel.HSL -> {
+            val hsl = ColorUtil.colorToHSL(this)
+            listOf(
+                ColorComponent("H", "${hsl[0].round()}°"),
+                ColorComponent("S", "${hsl[1].fractionToPercent()}%"),
+                ColorComponent("L", "${hsl[2].fractionToPercent()}%"),
+                alpha
+            )
         }
     }
 }

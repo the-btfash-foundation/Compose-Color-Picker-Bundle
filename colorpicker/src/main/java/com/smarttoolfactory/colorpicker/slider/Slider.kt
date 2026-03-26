@@ -360,7 +360,7 @@ fun SliderAlphaRGB(
 }
 
 /**
- * Slider implementation that uses [ColorfulSlider] to have create **Slider** with gradient
+ * Slider implementation that uses [ColorfulSlider] to create **Slider** with gradient
  * colors with custom thumb radius and track height, and draws checker pattern behind the
  * track of [ColorfulSlider] if [drawChecker] is set to true
  * @param value that is read by [ColorfulSlider]

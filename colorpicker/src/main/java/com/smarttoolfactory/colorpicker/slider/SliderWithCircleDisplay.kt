@@ -295,17 +295,13 @@ fun SliderWithCircleDisplay(
     ) {
         CircleDisplay(
             modifier =
-            circleModifier
-                .widthIn(min = 70.dp)
-                .heightIn(min = 70.dp),
+                circleModifier
+                    .widthIn(min = 70.dp)
+                    .heightIn(min = 70.dp),
             color = color
         )
         Spacer(modifier = Modifier.width(10.dp))
-        Column(
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            content()
-        }
+        Column(verticalArrangement = Arrangement.SpaceAround) { content() }
     }
 }
 
@@ -317,9 +313,9 @@ fun SliderWithCircleDisplay(
 fun CircleDisplay(modifier: Modifier = Modifier, color: Color) {
     Box(
         modifier =
-        modifier
-            .clip(CircleShape)
-            .drawChecker(CircleShape)
-            .background(color)
+            modifier
+                .clip(CircleShape)
+                .drawChecker(CircleShape)
+                .background(color)
     )
 }

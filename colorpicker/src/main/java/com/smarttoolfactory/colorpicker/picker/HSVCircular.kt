@@ -3,7 +3,9 @@ package com.smarttoolfactory.colorpicker.picker
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -85,19 +87,24 @@ fun HSVColorPickerCircularWithSliders(
     initialColor: Color,
     modifier: Modifier = Modifier,
     selectionRadius: Dp = 8.dp,
-    onColorChange: (Color, String) -> Unit
+    onColorChange: (Color) -> Unit
 ) {
-    val hsvArray = ColorUtil.colorToHSV(initialColor)
+    val initialHsv = remember(initialColor) { ColorUtil.colorToHSV(initialColor) }
 
-    var hue by remember { mutableStateOf(hsvArray[0]) }
-    var saturation by remember { mutableStateOf(hsvArray[1]) }
-    var value by remember { mutableStateOf(hsvArray[2]) }
-    var alpha by remember { mutableStateOf(initialColor.alpha) }
+    var hue by remember { mutableFloatStateOf(initialHsv[0]) }
+    var saturation by remember { mutableFloatStateOf(initialHsv[1]) }
+    var value by remember { mutableFloatStateOf(initialHsv[2]) }
+    var alpha by remember { mutableFloatStateOf(initialColor.alpha) }
 
-    val currentColor =
-        Color.hsv(hue = hue, saturation = saturation, value = value, alpha = alpha)
-
-    onColorChange(currentColor, ColorUtil.colorToHexAlpha(currentColor))
+    LaunchedEffect(hue, saturation, value, alpha) {
+        val color = Color.hsv(
+            hue = hue,
+            saturation = saturation,
+            value = value,
+            alpha = alpha
+        )
+        onColorChange(color)
+    }
 
     Column(
         modifier = modifier,
@@ -119,12 +126,8 @@ fun HSVColorPickerCircularWithSliders(
             saturation = saturation,
             value = value,
             alpha = alpha,
-            onValueChange = {
-                value = it
-            },
-            onAlphaChange = {
-                alpha = it
-            }
+            onValueChange = { value = it },
+            onAlphaChange = { alpha = it }
         )
     }
 }
