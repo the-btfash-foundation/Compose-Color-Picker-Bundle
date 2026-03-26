@@ -23,14 +23,14 @@ publishing {
 }
 
 dependencies {
-    implementation(libs.androidx.core)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.tooling)
-    implementation(libs.androidx.material)
-    implementation(libs.androidx.runtime)
-    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.compose.extended.gestures)
-    implementation(libs.compose.extended.colors)
-    implementation(libs.compose.colorful.sliders)
+    implementation(libs.stf.compose.extended.gestures)
+    implementation(libs.stf.compose.extended.colors)
+    implementation(libs.stf.compose.colorful.sliders)
 }
