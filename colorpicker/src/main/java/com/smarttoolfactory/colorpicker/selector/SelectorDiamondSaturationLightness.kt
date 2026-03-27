@@ -305,13 +305,12 @@ private fun SelectorDiamondImpl(
             )
             drawPath(
                 path = diamondPath,
-                brushSrc,
-                blendMode =
-                    if (colorModel == ColorModel.HSV) {
-                        BlendMode.Multiply
-                    } else {
-                        BlendMode.Overlay
-                    }
+                brush = brushSrc,
+                blendMode = if (colorModel == ColorModel.HSV) {
+                    BlendMode.Multiply
+                } else {
+                    BlendMode.Overlay
+                }
             )
         }
 
