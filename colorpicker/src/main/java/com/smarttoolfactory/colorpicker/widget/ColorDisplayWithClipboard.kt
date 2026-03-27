@@ -109,20 +109,19 @@ fun ColorDisplayWithClipboard(modifier: Modifier = Modifier, color: Color) {
 
     val hexText = ColorUtil.colorToHex(color)
     Column(
-        modifier =
-            modifier
-                .shadow(
-                    2.dp,
-                    if (expanded) {
-                        RoundedCornerShape(25)
-                    } else {
-                        RoundedCornerShape(50)
-                    }
-                )
-                .width(200.dp)
-                .background(color = color)
-                .clickable { expanded = !expanded }
-                .padding(start = 16.dp, end = 2.dp, top = 2.dp, bottom = 2.dp)
+        modifier = modifier
+            .shadow(
+                2.dp,
+                if (expanded) {
+                    RoundedCornerShape(25)
+                } else {
+                    RoundedCornerShape(50)
+                }
+            )
+            .width(200.dp)
+            .background(color = color)
+            .clickable { expanded = !expanded }
+            .padding(start = 16.dp, end = 2.dp, top = 2.dp, bottom = 2.dp)
     ) {
         Row {
             Column {

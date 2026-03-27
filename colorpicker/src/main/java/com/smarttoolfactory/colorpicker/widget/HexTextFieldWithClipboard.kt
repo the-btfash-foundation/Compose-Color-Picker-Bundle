@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -115,17 +115,17 @@ fun HexTextFieldWithClipboard(
     ) {
         BasicTextField(
             modifier =
-                Modifier
-                    .width(140.dp)
-                    .wrapContentHeight()
-                    .padding(bottom = 10.dp, top = 12.dp),
+            Modifier
+                .width(140.dp)
+                .wrapContentHeight()
+                .padding(bottom = 10.dp, top = 12.dp),
             visualTransformation = HexVisualTransformation(useAlpha),
             value = hexString.removePrefix("#"),
             textStyle =
-                TextStyle(
-                    color = textColor,
-                    fontSize = 20.sp
-                ),
+            TextStyle(
+                color = textColor,
+                fontSize = 20.sp
+            ),
             onValueChange = {
                 if (it.length <= if (useAlpha) 8 else 6) {
                     var validHex = true
@@ -263,17 +263,17 @@ fun HexTextFieldWithLabelClipboard(
 
             BasicTextField(
                 modifier =
-                    Modifier
-                        .width(140.dp)
-                        .wrapContentHeight()
-                        .padding(bottom = 10.dp, top = 12.dp),
+                Modifier
+                    .width(140.dp)
+                    .wrapContentHeight()
+                    .padding(bottom = 10.dp, top = 12.dp),
                 visualTransformation = HexVisualTransformation(false),
                 value = hexString.removePrefix("#"),
                 textStyle =
-                    TextStyle(
-                        color = textColor,
-                        fontSize = 20.sp
-                    ),
+                TextStyle(
+                    color = textColor,
+                    fontSize = 20.sp
+                ),
                 onValueChange = {
                     if (it.length <= 6) {
                         var validHex = true

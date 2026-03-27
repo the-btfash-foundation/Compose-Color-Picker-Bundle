@@ -49,11 +49,10 @@ fun ColorDisplayExposedSelectionMenu(
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier =
-            Modifier
-                .background(backgroundColor)
-                .fillMaxWidth()
-                .padding(2.dp)
+        modifier = Modifier
+            .background(backgroundColor)
+            .fillMaxWidth()
+            .padding(2.dp)
     ) {
         ExposedSelectionMenu(
             modifier = Modifier.width(100.dp),
@@ -99,10 +98,7 @@ private fun ColorComponentsDisplayPrev() {
     }
 }
 
-private data class ColorComponent(
-    val label: String,
-    val value: String
-)
+private data class ColorComponent(val label: String, val value: String)
 
 @Composable
 fun ColorComponentsDisplay(

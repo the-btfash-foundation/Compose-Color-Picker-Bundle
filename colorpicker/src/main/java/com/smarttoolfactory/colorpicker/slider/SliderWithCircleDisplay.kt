@@ -312,10 +312,9 @@ fun SliderWithCircleDisplay(
 @Composable
 fun CircleDisplay(modifier: Modifier = Modifier, color: Color) {
     Box(
-        modifier =
-            modifier
-                .clip(CircleShape)
-                .drawChecker(CircleShape)
-                .background(color)
+        modifier = modifier
+            .clip(CircleShape)
+            .drawChecker(CircleShape)
+            .background(color)
     )
 }
