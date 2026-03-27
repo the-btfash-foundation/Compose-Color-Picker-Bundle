@@ -1,24 +1,12 @@
 plugins {
     id("w2sv.android-library")
     alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.vanniktech.maven.publish)
 }
 
 android {
     buildFeatures {
         compose = true
-    }
-}
-
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = "com.w2sv"
-            artifactId = "colorpicker"
-            version = version.toString()
-            afterEvaluate {
-                from(components["release"])
-            }
-        }
     }
 }
 

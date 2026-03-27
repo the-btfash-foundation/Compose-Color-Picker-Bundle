@@ -15,25 +15,11 @@ https://user-images.githubusercontent.com/35650605/161702454-34b0cf00-8496-4060-
 
 ## Gradle Setup
 
-To get a Git project into your build:
-
-* Step 1. Add the JitPack repository to your build file Add it in your root build.gradle at the end
-  of repositories:
-
-```
-allprojects {
-  repositories {
-      ...
-      maven { url 'https://jitpack.io' }
-  }
-}
-```
-
 * Step 2. Add the dependency
 
 ```
 dependencies {
-    implementation 'com.github.SmartToolFactory:Compose-Color-Picker-Bundle:<version>'
+    implementation("io.github.w2sv:compose-color-picker:<version>")
 }
 ```
 
@@ -42,7 +28,7 @@ dependencies {
 There are various selection of default color pickers and with selectors sliders, and hex displays
 it's possible to create new ones either.
 
-| Hue Ring-Diamond HSL                                                      | Hue Ring-Diamond HEX                                                      | Hue- Ring-Rect HSL                                                     | Hue Ring-Rect HSV                                                      | 
+| Hue Ring-Diamond HSL                                                      | Hue Ring-Diamond HEX                                                      | Hue- Ring-Rect HSL                                                     | Hue Ring-Rect HSV                                                      |
 |---------------------------------------------------------------------------|---------------------------------------------------------------------------|------------------------------------------------------------------------|------------------------------------------------------------------------|
 | <img src="./screenshots/colorpicker/cp_ring_diamond_hsl.png" width="250"> | <img src="./screenshots/colorpicker/cp_ring_diamond_hex.png" width="250"> | <img src="./screenshots/colorpicker/cp_ring_rect_hsl.png" width="250"> | <img src="./screenshots/colorpicker/cp_ring_rect_hsv.png" width="250"> |
 
@@ -67,7 +53,7 @@ ColorPickerRingRectHSL(
   ringBorderStrokeWidth: Dp = 4.dp,
   selectionRadius: Dp = 8.dp,
   onColorChange: (Color) -> Unit
-) 
+)
 ```
 
 ColorPicker with `SelectorRingHue` hue selector and `SelectorRectSaturationLightnessHSL`  saturation
@@ -229,4 +215,4 @@ data class BrushColor(
 - [x] Add gradient selection demo
 - [x] Add color detection from screen demo
 
-  
+
