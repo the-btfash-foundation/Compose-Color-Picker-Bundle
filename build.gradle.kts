@@ -9,3 +9,9 @@ plugins {
 versionCatalogUpdate {
     versionSelector(VersionSelectors.PREFER_STABLE)
 }
+
+rootProject.file("version.txt")
+    .takeIf { it.exists() }
+    ?.readText()
+    ?.trim()
+    ?.let { version = it }
