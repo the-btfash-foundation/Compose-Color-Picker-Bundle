@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
@@ -62,8 +63,9 @@ fun ColorPickerRingHSL(
     initialColor: Color,
     colorModel: ColorModel,
     modifier: Modifier = Modifier,
-    saturationLightnessSelectorShape: SaturationLightnessSelectorShape = SaturationLightnessSelectorShape.Rect,
     ringProperties: SelectorRingProperties = SelectorRingProperties(),
+    saturationLightnessSelectorShape: SaturationLightnessSelectorShape = SaturationLightnessSelectorShape.Rect,
+    selectorRadius: Dp = 8.dp,
     showAlphaSlider: Boolean = true,
     sliderPanelModifier: Modifier = Modifier.padding(start = 10.dp, end = 8.dp),
     isColorModelSelectable: Boolean = true,
@@ -109,7 +111,7 @@ fun ColorPickerRingHSL(
                             hue = color.hue,
                             saturation = color.saturation,
                             lightness = color.lightness,
-                            selectionRadius = ringProperties.selectorRadius
+                            selectionRadius = selectorRadius
                         ) { s, l -> color = color.copy(saturation = s, lightness = l) }
 
                     SaturationLightnessSelectorShape.Diamond ->
@@ -118,7 +120,7 @@ fun ColorPickerRingHSL(
                             hue = color.hue,
                             saturation = color.saturation,
                             lightness = color.lightness,
-                            selectionRadius = ringProperties.selectorRadius
+                            selectionRadius = selectorRadius
                         ) { s, l -> color = color.copy(saturation = s, lightness = l) }
                 }
             }

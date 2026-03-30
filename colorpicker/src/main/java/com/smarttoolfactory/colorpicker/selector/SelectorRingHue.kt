@@ -29,7 +29,7 @@ import com.smarttoolfactory.gesture.detectMotionEvents
 @Preview
 @Composable
 private fun Prev() {
-    Box { HueSelectorRing(hue = 90f, onChange = {}) }
+    Box { HueSelectorRing(hue = 270f, onChange = {}) }
 }
 
 /**
@@ -37,14 +37,14 @@ private fun Prev() {
  * @param innerRadiusFraction radius ratio of inner radius of ring in percent
  * @param borderStrokeColor color for drawing border outer and inner positions of ring
  * @param borderStrokeWidth width of stroke for drawing border inner and outer positions of ring
- * @param selectorRadius radius of selection circle that moves based on touch position
+ * @param selectorThickness thickness of selection indicator that moves based on touch position
  */
 data class SelectorRingProperties(
     val outerRadiusFraction: Float = 1f,
     val innerRadiusFraction: Float = 0.75f,
     val borderStrokeColor: Color = Color.Black,
     val borderStrokeWidth: Dp = 1.dp,
-    val selectorRadius: Dp = 8.dp
+    val selectorThickness: Dp = 16.dp
 )
 
 @Composable
@@ -85,10 +85,13 @@ fun HueSelectorRing(
             style = Stroke(width = geometry.borderStrokeWidthPx)
         )
 
-        withTransform({ rotate(degrees = -coercedHue) }) {
-            drawHueSelectionCircle(
+        withTransform({
+            rotate(degrees = -coercedHue)
+        }) {
+            drawHueSelectionIndicator(
                 center = Offset(geometry.center.x + geometry.ringRadius, geometry.center.y),
-                radius = geometry.selectorRadiusPx
+                width = geometry.ringThickness,
+                height = geometry.selectorThicknessPx
             )
         }
     }
@@ -98,38 +101,39 @@ private fun Modifier.hueSelectorInput(
     properties: SelectorRingProperties,
     density: Density,
     onChange: (Float) -> Unit
-): Modifier = pointerInput(properties, density, onChange) {
-    var isTouched = false
+): Modifier =
+    pointerInput(properties, density, onChange) {
+        var isTouched = false
 
-    fun updateHue(position: Offset) {
-        val geometry = properties.toGeometry(size.toSize(), density)
-        if (position in geometry) {
-            onChange(calculateAngleFromLocalCoordinates(geometry.center, position))
-        }
-    }
-
-    detectMotionEvents(
-        onDown = {
+        fun updateHue(position: Offset) {
             val geometry = properties.toGeometry(size.toSize(), density)
-            isTouched = it.position in geometry
-            if (isTouched) {
-                onChange(calculateAngleFromLocalCoordinates(geometry.center, it.position))
-                it.consume()
+            if (position in geometry) {
+                onChange(calculateAngleFromLocalCoordinates(geometry.center, position))
             }
-        },
-        onMove = {
-            if (isTouched) {
-                updateHue(it.position)
-                it.consume()
-            }
-        },
-        onUp = {
-            if (isTouched) it.consume()
-            isTouched = false
-        },
-        delayAfterDownInMillis = 20
-    )
-}
+        }
+
+        detectMotionEvents(
+            onDown = {
+                val geometry = properties.toGeometry(size.toSize(), density)
+                isTouched = it.position in geometry
+                if (isTouched) {
+                    onChange(calculateAngleFromLocalCoordinates(geometry.center, it.position))
+                    it.consume()
+                }
+            },
+            onMove = {
+                if (isTouched) {
+                    updateHue(it.position)
+                    it.consume()
+                }
+            },
+            onUp = {
+                if (isTouched) it.consume()
+                isTouched = false
+            },
+            delayAfterDownInMillis = 20
+        )
+    }
 
 private data class SelectorRingGeometry(
     val center: Offset,
@@ -138,7 +142,7 @@ private data class SelectorRingGeometry(
     val ringThickness: Float,
     val ringRadius: Float,
     val borderStrokeWidthPx: Float,
-    val selectorRadiusPx: Float
+    val selectorThicknessPx: Float
 ) {
     operator fun contains(position: Offset): Boolean =
         calculateDistanceFromCenter(center, position) in innerRadiusPx..outerRadiusPx
@@ -160,13 +164,7 @@ private fun SelectorRingProperties.toGeometry(size: Size, density: Density): Sel
         borderStrokeWidth.toPx().coerceAtMost(innerRadiusPx * 0.2f)
     }
 
-    val selectorRadiusPx = with(density) {
-        if (selectorRadius == Dp.Unspecified) {
-            (innerRadiusPx * 0.08f).coerceAtMost(ringThickness)
-        } else {
-            selectorRadius.toPx()
-        }
-    }
+    val selectorRadiusPx = with(density) { selectorThickness.toPx() }
 
     return SelectorRingGeometry(
         center = center,
@@ -175,6 +173,6 @@ private fun SelectorRingProperties.toGeometry(size: Size, density: Density): Sel
         ringThickness = ringThickness,
         ringRadius = ringRadius,
         borderStrokeWidthPx = borderStrokeWidthPx,
-        selectorRadiusPx = selectorRadiusPx
+        selectorThicknessPx = selectorRadiusPx
     )
 }

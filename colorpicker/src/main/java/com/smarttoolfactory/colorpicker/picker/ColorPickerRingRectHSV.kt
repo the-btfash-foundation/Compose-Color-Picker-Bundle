@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSV
 import com.smarttoolfactory.colorpicker.model.ColorModel
@@ -46,6 +47,7 @@ fun ColorPickerRingRectHSV(
     modifier: Modifier = Modifier,
     initialColor: Color,
     ringProperties: SelectorRingProperties = SelectorRingProperties(),
+    selectorRadius: Dp = SelectionCircleDefaults.radius,
     onColorChange: (Color, String) -> Unit
 ) {
     var inputColorModel by remember { mutableStateOf(ColorModel.HSV) }
@@ -71,10 +73,9 @@ fun ColorPickerRingRectHSV(
 
         // Initial and Current Colors
         ColorDisplayRoundedRect(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 50.dp, vertical = 10.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 50.dp, vertical = 10.dp),
             initialColor = initialColor,
             currentColor = currentColor
         )
@@ -91,14 +92,13 @@ fun ColorPickerRingRectHSV(
 
             // Rect Shaped Saturation and Lightness Selector
             SelectorRectSaturationValueHSV(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(ringProperties.innerRadiusFraction * .65f)
-                        .aspectRatio(1f),
+                modifier = Modifier
+                    .fillMaxWidth(ringProperties.innerRadiusFraction * .65f)
+                    .aspectRatio(1f),
                 hue = hue,
                 saturation = saturation,
                 value = value,
-                selectionRadius = ringProperties.selectorRadius
+                selectionRadius = selectorRadius
             ) { s, v ->
                 saturation = s
                 value = v
@@ -117,13 +117,12 @@ fun ColorPickerRingRectHSV(
         // HSL-HSV-RGB Sliders
         CompositeSliderPanel(
             modifier = Modifier.padding(start = 10.dp, end = 7.dp),
-            compositeColor =
-                ColorHSV(
-                    hue = hue,
-                    saturation = saturation,
-                    value = value,
-                    alpha = alpha
-                ),
+            compositeColor = ColorHSV(
+                hue = hue,
+                saturation = saturation,
+                value = value,
+                alpha = alpha
+            ),
             onColorChange = {
                 (it as? ColorHSV)?.let { color ->
                     hue = color.hue

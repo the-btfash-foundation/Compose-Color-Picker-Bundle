@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
-import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
+import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRingProperties
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.ui.Grey400
@@ -49,6 +49,7 @@ fun ColorPickerRingDiamondHEX(
     initialColor: Color,
     modifier: Modifier = Modifier,
     ringProperties: SelectorRingProperties = SelectorRingProperties(),
+    selectorRadius: Dp = SelectionCircleDefaults.radius,
     onColorChange: (Color, String) -> Unit
 ) {
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -94,7 +95,7 @@ fun ColorPickerRingDiamondHEX(
             HueSelectorRing(
                 modifier = Modifier.fillMaxWidth(1f),
                 hue = hue,
-                properties = ringProperties,
+                properties = ringProperties
             ) { hueChange ->
                 hue = hueChange
                 hexString =
@@ -114,7 +115,7 @@ fun ColorPickerRingDiamondHEX(
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                selectionRadius = ringProperties.selectorRadius
+                selectionRadius = selectorRadius
             ) { s, l ->
                 saturation = s
                 lightness = l

@@ -26,8 +26,9 @@ import com.smarttoolfactory.colorpicker.model.ColorMode
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.model.rememberGradientColorState
-import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
+import com.smarttoolfactory.colorpicker.picker.SelectionCircleDefaults
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
+import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRingProperties
 import com.smarttoolfactory.colorpicker.selector.gradient.BrushDisplay
 import com.smarttoolfactory.colorpicker.selector.gradient.GradientSelector
@@ -55,6 +56,7 @@ fun ColorPickerGradientRingDiamondHSL(
     initialBrushColor: BrushColor,
     gradientColorState: GradientColorState = rememberGradientColorState(),
     ringProperties: SelectorRingProperties = SelectorRingProperties(),
+    selectorRadius: Dp = SelectionCircleDefaults.radius,
     onBrushColorChange: (BrushColor) -> Unit
 ) {
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -113,7 +115,7 @@ fun ColorPickerGradientRingDiamondHSL(
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                selectionRadius = ringProperties.selectorRadius
+                selectionRadius = selectorRadius
             ) { s, l ->
                 saturation = s
                 lightness = l

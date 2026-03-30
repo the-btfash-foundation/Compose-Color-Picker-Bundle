@@ -31,14 +31,14 @@ import com.smarttoolfactory.extendedcolors.util.ColorUtil
  * sliders for each color models.
  *
  * @param initialColor color that is passed to this picker initially.
- * @param selectionRadius radius of white and black circle selector.
+ * @param selectorRadius radius of white and black circle selector.
  * @param onColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
  * [SelectorRectSaturationValueHSV] or [CompositeSliderPanel]
  */
 @Composable
 fun ColorPickerRingRectHex(
     modifier: Modifier = Modifier,
-    selectionRadius: Dp = 8.dp,
+    selectorRadius: Dp = SelectionCircleDefaults.radius,
     initialColor: Color,
     onColorChange: (Color, String) -> Unit
 ) {
@@ -66,7 +66,7 @@ fun ColorPickerRingRectHex(
             HueSelectorRing(
                 modifier = Modifier.fillMaxWidth(1f),
                 hue = hue,
-                properties = SelectorRingProperties(selectorRadius = selectionRadius)
+                properties = SelectorRingProperties()
             ) { hueChange ->
                 hue = hueChange
             }
@@ -74,13 +74,13 @@ fun ColorPickerRingRectHex(
             // Rect Shaped Saturation and Lightness Selector
             SelectorRectSaturationValueHSV(
                 modifier =
-                    Modifier
-                        .fillMaxWidth(.5f)
-                        .aspectRatio(1f),
+                Modifier
+                    .fillMaxWidth(.5f)
+                    .aspectRatio(1f),
                 hue = hue,
                 saturation = saturation,
                 value = value,
-                selectionRadius = selectionRadius
+                selectionRadius = selectorRadius
             ) { s, v ->
                 saturation = s
                 value = v

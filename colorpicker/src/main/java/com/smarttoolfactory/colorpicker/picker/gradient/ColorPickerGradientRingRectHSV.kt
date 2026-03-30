@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.BrushColor
 import com.smarttoolfactory.colorpicker.model.ColorHSV
@@ -26,6 +27,7 @@ import com.smarttoolfactory.colorpicker.model.ColorMode
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.model.rememberGradientColorState
+import com.smarttoolfactory.colorpicker.picker.SelectionCircleDefaults
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
@@ -56,6 +58,7 @@ fun ColorPickerGradientRingRectHSV(
     initialBrushColor: BrushColor,
     gradientColorState: GradientColorState = rememberGradientColorState(),
     ringProperties: SelectorRingProperties = SelectorRingProperties(),
+    selectorRadius: Dp = SelectionCircleDefaults.radius,
     onBrushColorChange: (BrushColor) -> Unit
 ) {
     var inputColorModel by remember { mutableStateOf(ColorModel.HSV) }
@@ -89,9 +92,9 @@ fun ColorPickerGradientRingRectHSV(
                 else ->
                     ColorDisplayRoundedRect(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 50.dp, vertical = 10.dp),
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 50.dp, vertical = 10.dp),
                         initialColor = initialBrushColor.color,
                         currentColor = gradientColorState.color
                     )
@@ -114,13 +117,13 @@ fun ColorPickerGradientRingRectHSV(
             // Rect Shaped Saturation and Lightness Selector
             SelectorRectSaturationValueHSV(
                 modifier =
-                    Modifier
-                        .fillMaxWidth(ringProperties.innerRadiusFraction * .6f)
-                        .aspectRatio(1f),
+                Modifier
+                    .fillMaxWidth(ringProperties.innerRadiusFraction * .6f)
+                    .aspectRatio(1f),
                 hue = hue,
                 saturation = saturation,
                 value = value,
-                selectionRadius = ringProperties.selectorRadius
+                selectionRadius = selectorRadius
             ) { s, v ->
                 saturation = s
                 value = v
@@ -163,9 +166,9 @@ fun ColorPickerGradientRingRectHSV(
             ColorMode.Gradient -> {
                 Column(
                     modifier =
-                        Modifier
-                            .fillMaxHeight()
-                            .verticalScroll(rememberScrollState())
+                    Modifier
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
                 ) {
                     GradientSelector(
                         color = gradientColorState.color,
@@ -179,12 +182,12 @@ fun ColorPickerGradientRingRectHSV(
             else -> {
                 CompositeSliderPanel(
                     compositeColor =
-                        ColorHSV(
-                            hue = hue,
-                            saturation = saturation,
-                            value = value,
-                            alpha = alpha
-                        ),
+                    ColorHSV(
+                        hue = hue,
+                        saturation = saturation,
+                        value = value,
+                        alpha = alpha
+                    ),
                     onColorChange = {
                         (it as? ColorHSV)?.let { color ->
                             hue = color.hue

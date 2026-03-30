@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.BrushColor
 import com.smarttoolfactory.colorpicker.model.ColorHSL
@@ -26,6 +27,7 @@ import com.smarttoolfactory.colorpicker.model.ColorMode
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.model.rememberGradientColorState
+import com.smarttoolfactory.colorpicker.picker.SelectionCircleDefaults
 import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationLightnessHSL
@@ -56,6 +58,7 @@ fun ColorPickerGradientRingRectHSL(
     initialBrushColor: BrushColor,
     gradientColorState: GradientColorState = rememberGradientColorState(),
     ringProperties: SelectorRingProperties = SelectorRingProperties(),
+    selectorRadius: Dp = SelectionCircleDefaults.radius,
     onBrushColorChange: (BrushColor) -> Unit
 ) {
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -117,7 +120,7 @@ fun ColorPickerGradientRingRectHSL(
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                selectionRadius = ringProperties.selectorRadius
+                selectionRadius = selectorRadius
             ) { s, l ->
                 saturation = s
                 lightness = l
