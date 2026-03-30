@@ -4,6 +4,10 @@ plugins {
     alias(libs.plugins.vanniktech.maven.publish)
 }
 
+mavenPublishing {
+    coordinates(version = rootProject.version.toString())
+}
+
 android {
     buildFeatures {
         compose = true
