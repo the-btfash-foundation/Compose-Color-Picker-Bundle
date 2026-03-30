@@ -56,20 +56,20 @@ ColorPickerRingRectHSL(
 )
 ```
 
-ColorPicker with `SelectorRingHue` hue selector and `SelectorRectSaturationLightnessHSL`  saturation
+ColorPicker with `HueSelectorRing` hue selector and `SelectorRectSaturationLightnessHSL`  saturation
 lightness Selector that uses [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV) color model as base.
 This color picker has tabs section that can be changed between HSL, HSV and RGB color models and
 color can be set using `CompositeSliderPanel` which contains sliders for each color models.
 
 * **initialColor** color that is passed to this picker initially.
-* **ringOuterRadiusFraction** outer radius of `SelectorRingHue`.
-* **ringInnerRadiusFraction** inner radius of `SelectorRingHue`.
-* **ringBackgroundColor** background from center to inner radius of `SelectorRingHue`.
+* **ringOuterRadiusFraction** outer radius of `HueSelectorRing`.
+* **ringInnerRadiusFraction** inner radius of `HueSelectorRing`.
+* **ringBackgroundColor** background from center to inner radius of `HueSelectorRing`.
 * **ringBorderStrokeColor** stroke color for drawing borders around inner or outer radius.
 * **ringBorderStrokeWidth** stroke width of borders.
 * **selectionRadius radius** of white and black circle selector.
 * **onColorChange** callback that is triggered when `Color` is changed
-  using `SelectorRingHue` `SelectorDiamondSaturationLightnessHSL` or `CompositeSliderPanel`
+  using `HueSelectorRing` `SelectorDiamondSaturationLightnessHSL` or `CompositeSliderPanel`
 
 ### Implementation for other Color Pickers
 

@@ -15,14 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationValueHSV
-import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
+import com.smarttoolfactory.colorpicker.selector.SelectorRingProperties
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.widget.HexTextFieldWithCircleDisplay
 import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 /**
- * ColorPicker with [SelectorRingHue] hue selector and [SelectorRectSaturationValueHSV]
+ * ColorPicker with [HueSelectorRing] hue selector and [SelectorRectSaturationValueHSV]
  * saturation lightness Selector that uses [HSV](https://en.wikipedia.org/wiki/HSL_and_HSV)
  * color model as base.
  * This color picker has tabs section that can be changed between
@@ -31,7 +32,7 @@ import com.smarttoolfactory.extendedcolors.util.ColorUtil
  *
  * @param initialColor color that is passed to this picker initially.
  * @param selectionRadius radius of white and black circle selector.
- * @param onColorChange callback that is triggered when [Color] is changed using [SelectorRingHue],
+ * @param onColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
  * [SelectorRectSaturationValueHSV] or [CompositeSliderPanel]
  */
 @Composable
@@ -62,15 +63,10 @@ fun ColorPickerRingRectHex(
     ) {
         Box(contentAlignment = Alignment.Center) {
             // Ring Shaped Hue Selector
-            SelectorRingHue(
+            HueSelectorRing(
                 modifier = Modifier.fillMaxWidth(1f),
                 hue = hue,
-                outerRadiusFraction = .95f,
-                innerRadiusFraction = .75f,
-                backgroundColor = Color.Transparent,
-                borderStrokeColor = Color.Transparent,
-                borderStrokeWidth = 0.dp,
-                selectionRadius = selectionRadius
+                properties = SelectorRingProperties(selectorRadius = selectionRadius)
             ) { hueChange ->
                 hue = hueChange
             }
@@ -78,9 +74,9 @@ fun ColorPickerRingRectHex(
             // Rect Shaped Saturation and Lightness Selector
             SelectorRectSaturationValueHSV(
                 modifier =
-                Modifier
-                    .fillMaxWidth(.5f)
-                    .aspectRatio(1f),
+                    Modifier
+                        .fillMaxWidth(.5f)
+                        .aspectRatio(1f),
                 hue = hue,
                 saturation = saturation,
                 value = value,

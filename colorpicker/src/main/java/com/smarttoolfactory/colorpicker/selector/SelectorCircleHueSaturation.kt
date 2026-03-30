@@ -16,7 +16,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSVReversed
-import com.smarttoolfactory.colorpicker.util.calculateAngleFomLocalCoordinates
+import com.smarttoolfactory.colorpicker.util.calculateAngleFromLocalCoordinates
 import com.smarttoolfactory.colorpicker.util.calculateDistanceFromCenter
 import com.smarttoolfactory.colorpicker.util.calculatePositionFromAngleAndDistance
 import com.smarttoolfactory.gesture.detectMotionEvents
@@ -84,7 +84,7 @@ fun CircularHSVSelector(
                             isTouched = (distance < radius)
 
                             if (isTouched) {
-                                val hueChange = calculateAngleFomLocalCoordinates(center, position)
+                                val hueChange = calculateAngleFromLocalCoordinates(center, position)
                                 val saturationChange = (distance / radius).coerceIn(0f, 1f)
                                 onChange(hueChange, saturationChange)
                                 it.consume()
@@ -93,7 +93,7 @@ fun CircularHSVSelector(
                         onMove = {
                             if (isTouched) {
                                 val position = it.position
-                                val hueChange = calculateAngleFomLocalCoordinates(center, position)
+                                val hueChange = calculateAngleFromLocalCoordinates(center, position)
                                 val distance =
                                     calculateDistanceFromCenter(center, position).coerceAtMost(radius)
 

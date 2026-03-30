@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.BrushColor
 import com.smarttoolfactory.colorpicker.model.ColorHSL
@@ -27,9 +26,10 @@ import com.smarttoolfactory.colorpicker.model.ColorMode
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.model.GradientColorState
 import com.smarttoolfactory.colorpicker.model.rememberGradientColorState
+import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationLightnessHSL
-import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
+import com.smarttoolfactory.colorpicker.selector.SelectorRingProperties
 import com.smarttoolfactory.colorpicker.selector.gradient.BrushDisplay
 import com.smarttoolfactory.colorpicker.selector.gradient.GradientSelector
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
@@ -38,7 +38,7 @@ import com.smarttoolfactory.colorpicker.widget.ColorGradientModeChangeTabRow
 import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 /**
- * ColorPicker with [SelectorRingHue] hue selector and [SelectorDiamondSaturationLightnessHSL]
+ * ColorPicker with [HueSelectorRing] hue selector and [SelectorDiamondSaturationLightnessHSL]
  * saturation lightness Selector uses [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV)
  * color model as base.
  *
@@ -47,13 +47,7 @@ import com.smarttoolfactory.extendedcolors.util.ColorUtil
  * sliders for each color models.
  *
  * @param initialBrushColor [BrushColor] that is passed to this picker initially.
- * @param ringOuterRadiusFraction outer radius of [SelectorRingHue].
- * @param ringInnerRadiusFraction inner radius of [SelectorRingHue].
- * @param ringBackgroundColor background from center to inner radius of [SelectorRingHue].
- * @param ringBorderStrokeColor stroke color for drawing borders around inner or outer radius.
- * @param ringBorderStrokeWidth stroke width of borders.
- * @param selectionRadius radius of white and black circle selector.
- * @param onBrushColorChange callback that is triggered when [Color] is changed using [SelectorRingHue],
+ * @param onBrushColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
  * [SelectorDiamondSaturationLightnessHSL] or [CompositeSliderPanel]
  */
 @Composable
@@ -61,12 +55,7 @@ fun ColorPickerGradientRingRectHSL(
     modifier: Modifier = Modifier,
     initialBrushColor: BrushColor,
     gradientColorState: GradientColorState = rememberGradientColorState(),
-    ringOuterRadiusFraction: Float = .9f,
-    ringInnerRadiusFraction: Float = .6f,
-    ringBackgroundColor: Color = Color.Black,
-    ringBorderStrokeColor: Color = Color.Black,
-    ringBorderStrokeWidth: Dp = 4.dp,
-    selectionRadius: Dp = 8.dp,
+    ringProperties: SelectorRingProperties = SelectorRingProperties(),
     onBrushColorChange: (BrushColor) -> Unit
 ) {
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -108,15 +97,10 @@ fun ColorPickerGradientRingRectHSL(
 
         Box(contentAlignment = Alignment.Center) {
             // Ring Shaped Hue Selector
-            SelectorRingHue(
+            HueSelectorRing(
                 modifier = Modifier.fillMaxWidth(.9f),
                 hue = hue,
-                outerRadiusFraction = ringOuterRadiusFraction,
-                innerRadiusFraction = ringInnerRadiusFraction,
-                backgroundColor = ringBackgroundColor,
-                borderStrokeColor = ringBorderStrokeColor,
-                borderStrokeWidth = ringBorderStrokeWidth,
-                selectionRadius = selectionRadius
+                properties = ringProperties
             ) { hueChange ->
                 hue = hueChange
 
@@ -128,12 +112,12 @@ fun ColorPickerGradientRingRectHSL(
             SelectorRectSaturationLightnessHSL(
                 modifier =
                 Modifier
-                    .fillMaxWidth(ringInnerRadiusFraction * .6f)
+                    .fillMaxWidth(ringProperties.innerRadiusFraction * .6f)
                     .aspectRatio(1f),
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                selectionRadius = selectionRadius
+                selectionRadius = ringProperties.selectorRadius
             ) { s, l ->
                 saturation = s
                 lightness = l

@@ -20,13 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
+import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
 import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
 import com.smarttoolfactory.colorpicker.selector.SelectorRectSaturationLightnessHSL
-import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
+import com.smarttoolfactory.colorpicker.selector.SelectorRingProperties
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.widget.ColorModelChangeTabRow
 import com.smarttoolfactory.extendedcolors.util.ColorUtil.colorToHSL
@@ -38,8 +38,6 @@ private fun Prev() {
         ColorPickerRingHSL(
             initialColor = Color.Red,
             colorModel = ColorModel.RGB,
-            ringOuterRadiusFraction = 1f,
-            ringInnerRadiusFraction = 0.75f,
             showAlphaSlider = false,
             isColorModelSelectable = false,
             onColorChange = {}
@@ -48,7 +46,7 @@ private fun Prev() {
 }
 
 /**
- * ColorPicker with [SelectorRingHue] hue selector and [SelectorRectSaturationLightnessHSL]
+ * ColorPicker with [HueSelectorRing] hue selector and [SelectorRectSaturationLightnessHSL]
  * saturation lightness Selector that uses [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV)
  * color model as base.
  * This color picker has tabs section that can be changed between
@@ -56,13 +54,7 @@ private fun Prev() {
  * sliders for each color models.
  *
  * @param initialColor color that is passed to this picker initially.
- * @param ringOuterRadiusFraction outer radius of [SelectorRingHue].
- * @param ringInnerRadiusFraction inner radius of [SelectorRingHue].
- * @param ringBackgroundColor background from center to inner radius of [SelectorRingHue].
- * @param ringBorderStrokeColor stroke color for drawing borders around inner or outer radius.
- * @param ringBorderStrokeWidth stroke width of borders.
- * @param selectionRadius radius of white and black circle selector.
- * @param onColorChange callback that is triggered when [Color] is changed using [SelectorRingHue],
+ * @param onColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
  * [SelectorDiamondSaturationLightnessHSL] or [CompositeSliderPanel]
  */
 @Composable
@@ -71,12 +63,7 @@ fun ColorPickerRingHSL(
     colorModel: ColorModel,
     modifier: Modifier = Modifier,
     saturationLightnessSelectorShape: SaturationLightnessSelectorShape = SaturationLightnessSelectorShape.Rect,
-    ringOuterRadiusFraction: Float = .9f,
-    ringInnerRadiusFraction: Float = .6f,
-    ringBackgroundColor: Color = Color.Transparent,
-    ringBorderStrokeColor: Color = Color.Black,
-    ringBorderStrokeWidth: Dp = 1.dp,
-    selectionRadius: Dp = 8.dp,
+    ringProperties: SelectorRingProperties = SelectorRingProperties(),
     showAlphaSlider: Boolean = true,
     sliderPanelModifier: Modifier = Modifier.padding(start = 10.dp, end = 8.dp),
     isColorModelSelectable: Boolean = true,
@@ -105,14 +92,9 @@ fun ColorPickerRingHSL(
     ) {
         Box(contentAlignment = Alignment.Center) {
             // Ring Shaped Hue Selector
-            SelectorRingHue(
+            HueSelectorRing(
                 hue = color.hue,
-                outerRadiusFraction = ringOuterRadiusFraction,
-                innerRadiusFraction = ringInnerRadiusFraction,
-                backgroundColor = ringBackgroundColor,
-                borderStrokeColor = ringBorderStrokeColor,
-                borderStrokeWidth = ringBorderStrokeWidth,
-                selectionRadius = selectionRadius,
+                properties = ringProperties,
                 onChange = { color = color.copy(hue = it) }
             )
 
@@ -122,27 +104,26 @@ fun ColorPickerRingHSL(
                     SaturationLightnessSelectorShape.Rect ->
                         SelectorRectSaturationLightnessHSL(
                             modifier = Modifier
-                                .fillMaxWidth(ringInnerRadiusFraction * .65f)
+                                .fillMaxWidth(ringProperties.innerRadiusFraction * .65f)
                                 .aspectRatio(1f),
                             hue = color.hue,
                             saturation = color.saturation,
                             lightness = color.lightness,
-                            selectionRadius = selectionRadius
+                            selectionRadius = ringProperties.selectorRadius
                         ) { s, l -> color = color.copy(saturation = s, lightness = l) }
 
                     SaturationLightnessSelectorShape.Diamond ->
                         SelectorDiamondSaturationLightnessHSL(
-                            modifier = Modifier.fillMaxWidth(ringInnerRadiusFraction * .9f),
+                            modifier = Modifier.fillMaxWidth(ringProperties.innerRadiusFraction * .9f),
                             hue = color.hue,
                             saturation = color.saturation,
                             lightness = color.lightness,
-                            selectionRadius = selectionRadius
+                            selectionRadius = ringProperties.selectorRadius
                         ) { s, l -> color = color.copy(saturation = s, lightness = l) }
                 }
             }
         }
 
-        // HSL-HSV-RGB Color Model Change Tabs
         if (isColorModelSelectable) {
             ColorModelChangeTabRow(
                 modifier = Modifier.fillMaxWidth(0.8f),
@@ -151,7 +132,6 @@ fun ColorPickerRingHSL(
             )
         }
 
-        // HSL-HSV-RGB Sliders
         CompositeSliderPanel(
             modifier = sliderPanelModifier,
             compositeColor = color,

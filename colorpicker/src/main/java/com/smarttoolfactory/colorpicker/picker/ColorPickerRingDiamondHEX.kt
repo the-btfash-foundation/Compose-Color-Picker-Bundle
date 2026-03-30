@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.smarttoolfactory.colorpicker.model.ColorHSL
 import com.smarttoolfactory.colorpicker.model.ColorModel
 import com.smarttoolfactory.colorpicker.selector.SelectorDiamondSaturationLightnessHSL
-import com.smarttoolfactory.colorpicker.selector.SelectorRingHue
+import com.smarttoolfactory.colorpicker.selector.HueSelectorRing
+import com.smarttoolfactory.colorpicker.selector.SelectorRingProperties
 import com.smarttoolfactory.colorpicker.slider.CompositeSliderPanel
 import com.smarttoolfactory.colorpicker.ui.Grey400
 import com.smarttoolfactory.colorpicker.ui.Grey600
@@ -31,7 +32,7 @@ import com.smarttoolfactory.colorpicker.widget.HexTextField
 import com.smarttoolfactory.extendedcolors.util.ColorUtil
 
 /**
- * ColorPicker with [SelectorRingHue] hue selector and [SelectorDiamondSaturationLightnessHSL]
+ * ColorPicker with [HueSelectorRing] hue selector and [SelectorDiamondSaturationLightnessHSL]
  * saturation lightness Selector uses [HSL](https://en.wikipedia.org/wiki/HSL_and_HSV)
  * color model as base.
  *
@@ -40,25 +41,14 @@ import com.smarttoolfactory.extendedcolors.util.ColorUtil
  * sliders for each color models.
  *
  * @param initialColor color that is passed to this picker initially.
- * @param ringOuterRadiusFraction outer radius of [SelectorRingHue].
- * @param ringInnerRadiusFraction inner radius of [SelectorRingHue].
- * @param ringBackgroundColor background from center to inner radius of [SelectorRingHue].
- * @param ringBorderStrokeColor stroke color for drawing borders around inner or outer radius.
- * @param ringBorderStrokeWidth stroke width of borders.
- * @param selectionRadius radius of white and black circle selector.
- * @param onColorChange callback that is triggered when [Color] is changed using [SelectorRingHue],
+ * @param onColorChange callback that is triggered when [Color] is changed using [HueSelectorRing],
  * [SelectorDiamondSaturationLightnessHSL] or [CompositeSliderPanel]
  */
 @Composable
 fun ColorPickerRingDiamondHEX(
-    modifier: Modifier = Modifier,
     initialColor: Color,
-    ringOuterRadiusFraction: Float = .9f,
-    ringInnerRadiusFraction: Float = .6f,
-    ringBackgroundColor: Color = Color.Black,
-    ringBorderStrokeColor: Color = Color.Black,
-    ringBorderStrokeWidth: Dp = 4.dp,
-    selectionRadius: Dp = 8.dp,
+    modifier: Modifier = Modifier,
+    ringProperties: SelectorRingProperties = SelectorRingProperties(),
     onColorChange: (Color, String) -> Unit
 ) {
     var inputColorModel by remember { mutableStateOf(ColorModel.HSL) }
@@ -101,15 +91,10 @@ fun ColorPickerRingDiamondHEX(
 
         Box(contentAlignment = Alignment.Center) {
             // Ring Shaped Hue Selector
-            SelectorRingHue(
+            HueSelectorRing(
                 modifier = Modifier.fillMaxWidth(1f),
                 hue = hue,
-                outerRadiusFraction = ringOuterRadiusFraction,
-                innerRadiusFraction = ringInnerRadiusFraction,
-                backgroundColor = ringBackgroundColor,
-                borderStrokeColor = ringBorderStrokeColor,
-                borderStrokeWidth = ringBorderStrokeWidth,
-                selectionRadius = selectionRadius
+                properties = ringProperties,
             ) { hueChange ->
                 hue = hueChange
                 hexString =
@@ -125,11 +110,11 @@ fun ColorPickerRingDiamondHEX(
 
             // Diamond Shaped Saturation and Lightness Selector
             SelectorDiamondSaturationLightnessHSL(
-                modifier = Modifier.fillMaxWidth(ringInnerRadiusFraction * .9f),
+                modifier = Modifier.fillMaxWidth(ringProperties.innerRadiusFraction * .9f),
                 hue = hue,
                 saturation = saturation,
                 lightness = lightness,
-                selectionRadius = selectionRadius
+                selectionRadius = ringProperties.selectorRadius
             ) { s, l ->
                 saturation = s
                 lightness = l

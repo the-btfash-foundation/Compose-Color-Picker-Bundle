@@ -76,7 +76,7 @@ fun calculateDistanceFromCenter(center: Offset, position: Offset): Float {
  * Local coordinates of touch are equal to Composable position when in bounds, when
  * touch position is above this composable it returns minus in y axis.
  */
-fun calculateAngleFomLocalCoordinates(center: Offset, position: Offset): Float {
+fun calculateAngleFromLocalCoordinates(center: Offset, position: Offset): Float {
     if (center == Offset.Unspecified || position == Offset.Unspecified) return -1f
 
     val dy = center.y - position.y
