@@ -7,14 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,7 +38,8 @@ private fun Prev() {
         ColorPickerRingHSL(
             initialColor = Color.Red,
             colorModel = ColorModel.RGB,
-            ringOuterRadiusFraction = .85f,
+            ringOuterRadiusFraction = 1f,
+            ringInnerRadiusFraction = 0.75f,
             showAlphaSlider = false,
             isColorModelSelectable = false,
             onColorChange = {}
@@ -79,28 +78,25 @@ fun ColorPickerRingHSL(
     ringBorderStrokeWidth: Dp = 1.dp,
     selectionRadius: Dp = 8.dp,
     showAlphaSlider: Boolean = true,
+    sliderPanelModifier: Modifier = Modifier.padding(start = 10.dp, end = 8.dp),
     isColorModelSelectable: Boolean = true,
     onColorChange: (Color) -> Unit
 ) {
     var inputColorModel by remember(colorModel) { mutableStateOf(colorModel) }
 
-    val hslArray = colorToHSL(initialColor)
-
-    var hue by remember { mutableFloatStateOf(hslArray[0]) }
-    var saturation by remember { mutableFloatStateOf(hslArray[1]) }
-    var lightness by remember { mutableFloatStateOf(hslArray[2]) }
-    var alpha by remember { mutableFloatStateOf(initialColor.alpha) }
-
-    val currentColor = remember(hue, saturation, lightness, alpha) {
-        Color.hsl(
-            hue = hue,
-            saturation = saturation,
-            lightness = lightness,
-            alpha = alpha
+    var color by remember {
+        val hslArray = colorToHSL(initialColor)
+        mutableStateOf(
+            ColorHSL(
+                hue = hslArray[0],
+                saturation = hslArray[1],
+                lightness = hslArray[2],
+                alpha = initialColor.alpha
+            )
         )
     }
 
-    LaunchedEffect(hue, saturation, lightness, alpha) { onColorChange(currentColor) }
+    LaunchedEffect(color) { onColorChange(color.color) }
 
     Column(
         modifier = modifier,
@@ -110,15 +106,14 @@ fun ColorPickerRingHSL(
         Box(contentAlignment = Alignment.Center) {
             // Ring Shaped Hue Selector
             SelectorRingHue(
-                modifier = Modifier.fillMaxWidth(1f),
-                hue = hue,
+                hue = color.hue,
                 outerRadiusFraction = ringOuterRadiusFraction,
                 innerRadiusFraction = ringInnerRadiusFraction,
                 backgroundColor = ringBackgroundColor,
                 borderStrokeColor = ringBorderStrokeColor,
                 borderStrokeWidth = ringBorderStrokeWidth,
                 selectionRadius = selectionRadius,
-                onChange = { hue = it }
+                onChange = { color = color.copy(hue = it) }
             )
 
             // Saturation Lightness Selector
@@ -129,26 +124,20 @@ fun ColorPickerRingHSL(
                             modifier = Modifier
                                 .fillMaxWidth(ringInnerRadiusFraction * .65f)
                                 .aspectRatio(1f),
-                            hue = hue,
-                            saturation = saturation,
-                            lightness = lightness,
+                            hue = color.hue,
+                            saturation = color.saturation,
+                            lightness = color.lightness,
                             selectionRadius = selectionRadius
-                        ) { s, l ->
-                            saturation = s
-                            lightness = l
-                        }
+                        ) { s, l -> color = color.copy(saturation = s, lightness = l) }
 
                     SaturationLightnessSelectorShape.Diamond ->
                         SelectorDiamondSaturationLightnessHSL(
                             modifier = Modifier.fillMaxWidth(ringInnerRadiusFraction * .9f),
-                            hue = hue,
-                            saturation = saturation,
-                            lightness = lightness,
+                            hue = color.hue,
+                            saturation = color.saturation,
+                            lightness = color.lightness,
                             selectionRadius = selectionRadius
-                        ) { s, l ->
-                            saturation = s
-                            lightness = l
-                        }
+                        ) { s, l -> color = color.copy(saturation = s, lightness = l) }
                 }
             }
         }
@@ -156,7 +145,7 @@ fun ColorPickerRingHSL(
         // HSL-HSV-RGB Color Model Change Tabs
         if (isColorModelSelectable) {
             ColorModelChangeTabRow(
-                modifier = Modifier.width(350.dp),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 colorModel = inputColorModel,
                 onColorModelChange = { inputColorModel = it }
             )
@@ -164,21 +153,9 @@ fun ColorPickerRingHSL(
 
         // HSL-HSV-RGB Sliders
         CompositeSliderPanel(
-            modifier = Modifier.padding(start = 10.dp, end = 7.dp),
-            compositeColor = ColorHSL(
-                hue = hue,
-                saturation = saturation,
-                lightness = lightness,
-                alpha = alpha
-            ),
-            onColorChange = {
-                (it as? ColorHSL)?.let { color ->
-                    hue = color.hue
-                    saturation = color.saturation
-                    lightness = color.lightness
-                    alpha = color.alpha
-                }
-            },
+            modifier = sliderPanelModifier,
+            compositeColor = color,
+            onColorChange = { color = it as ColorHSL },
             showAlphaSlider = showAlphaSlider,
             inputColorModel = inputColorModel,
             outputColorModel = ColorModel.HSL

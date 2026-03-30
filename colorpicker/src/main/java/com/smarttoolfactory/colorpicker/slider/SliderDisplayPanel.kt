@@ -4,6 +4,8 @@ import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.smarttoolfactory.colorpicker.model.ColorRGB
+import com.smarttoolfactory.colorpicker.model.RGBAChannel
 import com.smarttoolfactory.slider.ColorfulSlider
 
 /*
@@ -174,65 +176,23 @@ fun SliderDisplayPanelHSL(
  * Blue Slider Display
  * Alpha Slider Display
  * ```
- * @param red Red of RGBA  in [0..1f]
- * @param green Hue of RGBA  in [0..1f]
- * @param blue Hue of RGBA  in [0..1f]
- * @param alpha Hue of RGBA  in [0..1f]
- * @param onRedChange lambda in which [red] should be updated. when this lambda is not nul
- * [SliderDisplayHueHSL] is added to Column of sliders.
- * @param onGreenChange lambda in which [green] should be updated. when this lambda is not nul
- * [[SliderDisplaySaturationHSV] is added to Column of sliders.
- * @param onBlueChange lambda in which [blue] should be updated. when this lambda is not nul
- * [[SliderDisplayLightnessHSL] is added to Column of sliders.
- * @param onAlphaChange lambda in which [alpha] should be updated. when this lambda is not nul
- * [SliderDisplayAlphaHSL] is added to Column of sliders.
  */
 @Composable
-fun SliderDisplayPanelRGBA(
-    modifier: Modifier,
-    @FloatRange(from = 0.0, to = 1.0) red: Float = 1f,
-    @FloatRange(from = 0.0, to = 1.0) green: Float = 0f,
-    @FloatRange(from = 0.0, to = 1.0) blue: Float = 0f,
-    @FloatRange(from = 0.0, to = 1.0) alpha: Float = 1f,
-    onRedChange: ((Float) -> Unit)? = null,
-    onGreenChange: ((Float) -> Unit)? = null,
-    onBlueChange: ((Float) -> Unit)? = null,
-    onAlphaChange: ((Float) -> Unit)? = null
+internal fun SliderDisplayPanelRGBA(
+    color: ColorRGB,
+    onChange: (ColorRGB) -> Unit,
+    modifier: Modifier = Modifier,
+    showAlphaSlider: Boolean = false
 ) {
     Column(modifier) {
-        onRedChange?.let { onRedChanged ->
-            SliderDisplayRedRGB(
-                modifier = Modifier,
-                red = red,
-                onValueChange = onRedChanged
-            )
-        }
-
-        onGreenChange?.let { onGreenChanged ->
-            SliderDisplayGreenRGB(
-                modifier = Modifier,
-                green = green,
-                onValueChange = onGreenChanged
-            )
-        }
-
-        onBlueChange?.let { onBlueChanged ->
-            SliderDisplayBlueRGB(
-                modifier = Modifier,
-                blue = blue,
-                onValueChange = onBlueChanged
-            )
-        }
-
-        onAlphaChange?.let { onAlphaChanged ->
-            SliderDisplayAlphaRGB(
-                modifier = Modifier,
-                red = red,
-                green = green,
-                blue = blue,
-                alpha = alpha,
-                onValueChange = onAlphaChanged
-            )
+        RGBAChannel.entries.forEach { channel ->
+            if (!channel.isAlpha || showAlphaSlider) {
+                TitledSliderRGBA(
+                    color = color,
+                    channel = channel,
+                    onChange = onChange
+                )
+            }
         }
     }
 }

@@ -3,8 +3,9 @@ package com.smarttoolfactory.colorpicker.slider
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,7 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.smarttoolfactory.colorpicker.ui.Grey400
+import com.smarttoolfactory.colorpicker.model.ColorRGB
+import com.smarttoolfactory.colorpicker.model.RGBAChannel
+import com.smarttoolfactory.colorpicker.model.RGBAChannel.Blue
+import com.smarttoolfactory.colorpicker.model.RGBAChannel.Green
+import com.smarttoolfactory.colorpicker.model.RGBAChannel.Red
 import com.smarttoolfactory.extendedcolors.util.fractionToPercent
 import com.smarttoolfactory.extendedcolors.util.fractionToRGBString
 
@@ -39,8 +44,8 @@ fun SliderDisplayHueHSV(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Hue",
-        description = "${hue.toInt()}°"
+        leadingLabel = "Hue",
+        trailingLabel = "${hue.toInt()}°"
     ) {
         SliderHueHSL(
             hue = hue,
@@ -69,8 +74,8 @@ fun SliderDisplaySaturationHSV(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Saturation",
-        description = "${saturation.fractionToPercent()}"
+        leadingLabel = "Saturation",
+        trailingLabel = "${saturation.fractionToPercent()}"
     ) {
         SliderSaturationHSV(
             hue = hue,
@@ -97,8 +102,8 @@ fun SliderDisplayValueHSV(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Value",
-        description = "${value.fractionToPercent()}"
+        leadingLabel = "Value",
+        trailingLabel = "${value.fractionToPercent()}"
     ) {
         SliderValueHSV(
             hue = hue,
@@ -124,8 +129,8 @@ fun SliderDisplayAlphaHSV(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Alpha",
-        description = "${alpha.fractionToPercent()}"
+        leadingLabel = "Alpha",
+        trailingLabel = "${alpha.fractionToPercent()}"
     ) {
         SliderAlphaHSV(
             hue = hue,
@@ -157,8 +162,8 @@ fun SliderDisplayHueHSL(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Hue",
-        description = "${hue.toInt()}°"
+        leadingLabel = "Hue",
+        trailingLabel = "${hue.toInt()}°"
     ) {
         SliderHueHSL(
             hue = hue,
@@ -187,8 +192,8 @@ fun SliderDisplaySaturationHSL(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Saturation",
-        description = "${saturation.fractionToPercent()}"
+        leadingLabel = "Saturation",
+        trailingLabel = "${saturation.fractionToPercent()}"
     ) {
         SliderSaturationHSL(
             hue = hue,
@@ -215,8 +220,8 @@ fun SliderDisplayLightnessHSL(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Lightness",
-        description = "${lightness.fractionToPercent()}"
+        leadingLabel = "Lightness",
+        trailingLabel = "${lightness.fractionToPercent()}"
     ) {
         SliderLightnessHSL(
             lightness = lightness,
@@ -240,8 +245,8 @@ fun SliderDisplayAlphaHSL(
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        title = "Alpha",
-        description = "${alpha.fractionToPercent()}"
+        leadingLabel = "Alpha",
+        trailingLabel = "${alpha.fractionToPercent()}"
     ) {
         SliderAlphaHSV(
             hue = hue,
@@ -257,144 +262,61 @@ fun SliderDisplayAlphaHSL(
 
 /**
  * Composable that shows a title as initial letter, title color and a Slider to select
- * [red] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param red in [0..1f]
- * @param onValueChange callback that returns change in [red] when Slider is dragged
+ * channel value in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
  */
 @Composable
-fun SliderDisplayRedRGB(
-    modifier: Modifier,
-    @FloatRange(from = 0.0, to = 1.0) red: Float,
-    onValueChange: (Float) -> Unit
+internal fun TitledSliderRGBA(
+    color: ColorRGB,
+    channel: RGBAChannel,
+    modifier: Modifier = Modifier,
+    onChange: (ColorRGB) -> Unit
 ) {
     TitledSliderDisplay(
         modifier = modifier,
-        titleColor = Color.Red,
-        title = "Red",
-        description = red.fractionToRGBString()
+        leadingLabelColor = when (channel) {
+            Red -> Color.Red
+            Green -> Color.Green
+            Blue -> Color.Blue
+            Alpha -> LocalContentColor.current
+        },
+        leadingLabel = channel.name.first().toString(),
+        trailingLabel = color[channel].fractionToRGBString()
     ) {
-        SliderRedRGB(
-            red = red,
-            onValueChange = onValueChange
-        )
-    }
-}
-
-/**
- * Composable that shows a title as initial letter, title color and a Slider to select
- * [green] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param green in [0..1f]
- * @param onValueChange callback that returns change in [green] when Slider is dragged
- */
-@Composable
-fun SliderDisplayGreenRGB(
-    modifier: Modifier,
-    @FloatRange(from = 0.0, to = 1.0) green: Float,
-    onValueChange: (Float) -> Unit
-) {
-    TitledSliderDisplay(
-        modifier = modifier,
-        titleColor = Color.Green,
-        title = "Green",
-        description = green.fractionToRGBString()
-    ) {
-        SliderGreenRGB(
-            green = green,
-            onValueChange = onValueChange
-        )
-    }
-}
-
-/**
- * Composable that shows a title as initial letter, title color and a Slider to select
- * [blue] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param blue in [0..1f]
- * @param onValueChange callback that returns change in [blue] when Slider is dragged
- */
-@Composable
-fun SliderDisplayBlueRGB(
-    modifier: Modifier,
-    @FloatRange(from = 0.0, to = 1.0) blue: Float,
-    onValueChange: (Float) -> Unit
-) {
-    TitledSliderDisplay(
-        modifier = modifier,
-        titleColor = Color.Blue,
-        title = "Blue",
-        description = blue.fractionToRGBString()
-    ) {
-        SliderBlueRGB(
-            blue = blue,
-            onValueChange = onValueChange
-        )
-    }
-}
-
-/**
- * Composable that shows a title as initial letter, title color and a Slider to select
- * [alpha] in [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param red in [0..1f]
- * @param green in [0..1f]
- * @param blue in [0..1f]
- * @param alpha in [0..1f]
- * @param onValueChange callback that returns change in [alpha] when Slider is dragged
- */
-@Composable
-fun SliderDisplayAlphaRGB(
-    modifier: Modifier,
-    @FloatRange(from = 0.0, to = 1.0) red: Float,
-    @FloatRange(from = 0.0, to = 1.0) green: Float,
-    @FloatRange(from = 0.0, to = 1.0) blue: Float,
-    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
-    onValueChange: (Float) -> Unit
-) {
-    TitledSliderDisplay(
-        modifier = modifier,
-        title = "Alpha",
-        description = "${alpha.fractionToPercent()}"
-    ) {
-        SliderAlphaRGB(
-            red = red,
-            green = green,
-            blue = blue,
-            alpha = alpha,
-            onValueChange = onValueChange
-        )
+        SliderRGBA(color, channel, onChange = onChange)
     }
 }
 
 /**
  * Composable that shows a title as initial letter, title color and a Slider to pick color.
- * @param title Title is positioned left side of the slider and presented with only initial letter
- * @param titleColor color of the [title] string
- * @param description shows the value retrieved from [slider] value change.
+ * @param leadingLabel Title is positioned left side of the slider and presented with only initial letter
+ * @param trailingLabel shows the value retrieved from [slider] value change.
  * @param slider is Composable that uses [CheckeredColorfulSlider]
  */
 @Composable
-fun TitledSliderDisplay(
+private fun TitledSliderDisplay(
+    leadingLabel: String,
+    trailingLabel: String,
     modifier: Modifier,
-    title: String,
-    titleColor: Color = Grey400,
-    description: String,
+    leadingLabelColor: Color = LocalContentColor.current,
     slider: @Composable () -> Unit
 ) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
         Text(
-            text = title.substring(0, 1),
-            color = titleColor,
+            text = leadingLabel,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = leadingLabelColor
         )
-        Spacer(modifier = Modifier.width(8.dp))
-        Box(modifier = Modifier.weight(1f)) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 8.dp)
+        ) {
             slider()
         }
-        Spacer(modifier = Modifier.width(8.dp))
-
         Text(
-            text = description,
+            text = trailingLabel,
             fontSize = 12.sp,
-            color = Grey400,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.width(30.dp)
         )

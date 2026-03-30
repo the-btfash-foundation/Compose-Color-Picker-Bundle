@@ -2,16 +2,18 @@ package com.smarttoolfactory.colorpicker.slider
 
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.smarttoolfactory.colorpicker.model.ColorRGB
+import com.smarttoolfactory.colorpicker.model.RGBAChannel
 import com.smarttoolfactory.colorpicker.ui.brush.sliderAlphaHSLGradient
 import com.smarttoolfactory.colorpicker.ui.brush.sliderAlphaHSVGradient
 import com.smarttoolfactory.colorpicker.ui.brush.sliderAlphaRGBGradient
@@ -226,11 +228,10 @@ fun SliderLightnessHSL(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float = 0f,
     @FloatRange(from = 0.0, to = 1.0) saturation: Float = 0f,
-    @FloatRange(from = 0.0, to = 1.0) lightness: Float,
+    @FloatRange(from = 0.0, to = 1.0) lightness: Float = 0f,
     onValueChange: (Float) -> Unit
 ) {
     val sliderLightnessGradient = sliderLightnessGradient(hue, saturation)
-
     CheckeredColorfulSlider(
         modifier = modifier,
         value = lightness,
@@ -249,9 +250,9 @@ fun SliderLightnessHSL(
  */
 @Composable
 fun SliderAlphaHSL(
-    modifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 360.0) hue: Float,
     @FloatRange(from = 0.0, to = 1.0) alpha: Float,
+    modifier: Modifier = Modifier,
     onValueChange: (Float) -> Unit
 ) {
     val sliderAlphaHSLGradient = sliderAlphaHSLGradient(hue = hue)
@@ -269,94 +270,41 @@ fun SliderAlphaHSL(
  */
 
 /**
- * [CheckeredColorfulSlider] that displays [red] change in
+ * [CheckeredColorfulSlider] that displays change in
  * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param red in [0..1f]
- * @param onValueChange callback that returns change in [red] when Slider is dragged
  */
 @Composable
-fun SliderRedRGB(
+internal fun SliderRGBA(
+    color: ColorRGB,
+    channel: RGBAChannel,
     modifier: Modifier = Modifier,
-    @FloatRange(from = 0.0, to = 1.0) red: Float,
-    onValueChange: (Float) -> Unit
+    onChange: (ColorRGB) -> Unit
 ) {
-    val sliderRedGradient = sliderRedGradient()
     CheckeredColorfulSlider(
         modifier = modifier,
-        value = red,
-        onValueChange = onValueChange,
-        brush = sliderRedGradient
+        value = color[channel],
+        onValueChange = { value ->
+            when (channel) {
+                RGBAChannel.Red -> onChange(color.copy(red = value))
+                RGBAChannel.Green -> onChange(color.copy(green = value))
+                RGBAChannel.Blue -> onChange(color.copy(blue = value))
+                RGBAChannel.Alpha -> onChange(color.copy(alpha = value))
+            }
+        },
+        brush = when (channel) {
+            RGBAChannel.Red -> sliderRedGradient()
+            RGBAChannel.Green -> sliderGreenGradient()
+            RGBAChannel.Blue -> sliderBlueGradient()
+            RGBAChannel.Alpha -> sliderAlphaRGBGradient(color)
+        },
+        drawChecker = channel == RGBAChannel.Alpha
     )
 }
 
-/**
- * [CheckeredColorfulSlider] that displays [green] change in
- * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param green in [0..1f]
- * @param onValueChange callback that returns change in [green] when Slider is dragged
- */
+@Preview
 @Composable
-fun SliderGreenRGB(
-    modifier: Modifier = Modifier,
-    @FloatRange(from = 0.0, to = 1.0) green: Float,
-    onValueChange: (Float) -> Unit
-) {
-    val sliderGreenGradient = sliderGreenGradient()
-    CheckeredColorfulSlider(
-        modifier = modifier,
-        value = green,
-        onValueChange = onValueChange,
-        brush = sliderGreenGradient
-    )
-}
-
-/**
- * [CheckeredColorfulSlider] that displays [blue] change in
- * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param blue in [0..1f]
- * @param onValueChange callback that returns change in [blue] when Slider is dragged
- */
-@Composable
-fun SliderBlueRGB(
-    modifier: Modifier = Modifier,
-    @FloatRange(from = 0.0, to = 1.0) blue: Float,
-    onValueChange: (Float) -> Unit
-) {
-    val sliderBlueGradient = sliderBlueGradient()
-    CheckeredColorfulSlider(
-        modifier = modifier,
-        value = blue,
-        onValueChange = onValueChange,
-        brush = sliderBlueGradient
-    )
-}
-
-/**
- * [CheckeredColorfulSlider] that displays [alpha] change in
- * [RGB](https://en.wikipedia.org/wiki/RGB_color_model) color model.
- * @param red in [0..1f]
- * @param green in [0..1f]
- * @param blue in [0..1f]
- * @param alpha in [0..1f]
- * @param onValueChange callback that returns change in [alpha] when Slider is dragged
- */
-@Composable
-fun SliderAlphaRGB(
-    modifier: Modifier = Modifier,
-    @FloatRange(from = 0.0, to = 1.0) red: Float,
-    @FloatRange(from = 0.0, to = 1.0) green: Float,
-    @FloatRange(from = 0.0, to = 1.0) blue: Float,
-    @FloatRange(from = 0.0, to = 1.0) alpha: Float,
-    onValueChange: (Float) -> Unit
-) {
-    val sliderAlphaRGBGradient = sliderAlphaRGBGradient(red, green, blue)
-    CheckeredColorfulSlider(
-        modifier = modifier,
-        value = alpha,
-        onValueChange = onValueChange,
-        brush = sliderAlphaRGBGradient,
-        drawChecker = true
-    )
+private fun RGBASliderPrev() {
+    SliderRGBA(color = ColorRGB(), channel = RGBAChannel.Green) { }
 }
 
 /**
@@ -371,23 +319,22 @@ fun SliderAlphaRGB(
  * display alpha
  */
 @Composable
-fun CheckeredColorfulSlider(
-    modifier: Modifier = Modifier,
+private fun CheckeredColorfulSlider(
     value: Float,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
-    onValueChange: (Float) -> Unit,
     brush: Brush,
-    drawChecker: Boolean = false
+    modifier: Modifier = Modifier,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    drawChecker: Boolean = false,
+    onValueChange: (Float) -> Unit
 ) {
-    BoxWithConstraints(
+    Box(
         modifier = modifier,
         contentAlignment = Alignment.CenterStart
     ) {
         if (drawChecker) {
             Box(
-                modifier =
-                Modifier
-                    .width(maxWidth)
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(11.dp)
                     .drawChecker(shape = RoundedCornerShape(6.dp))
             )
@@ -398,13 +345,10 @@ fun CheckeredColorfulSlider(
             modifier = Modifier,
             thumbRadius = 12.dp,
             trackHeight = 12.dp,
-            onValueChange = { value ->
-                onValueChange(value.roundToTwoDigits())
-            },
+            onValueChange = { value -> onValueChange(value.roundToTwoDigits()) },
             valueRange = valueRange,
             coerceThumbInTrack = true,
-            colors =
-            MaterialSliderDefaults.materialColors(
+            colors = MaterialSliderDefaults.materialColors(
                 activeTrackColor = SliderBrushColor(brush = brush),
                 inactiveTrackColor = SliderBrushColor(color = Color.Transparent)
             ),

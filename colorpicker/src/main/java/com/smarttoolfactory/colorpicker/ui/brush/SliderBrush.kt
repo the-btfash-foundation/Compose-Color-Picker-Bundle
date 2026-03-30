@@ -3,6 +3,7 @@ package com.smarttoolfactory.colorpicker.ui.brush
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import com.smarttoolfactory.colorpicker.model.ColorRGB
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSL
 import com.smarttoolfactory.colorpicker.ui.gradientColorScaleHSV
 
@@ -21,8 +22,7 @@ fun sliderHueHSVGradient(
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        gradientColorScaleHSV(
+        colors = gradientColorScaleHSV(
             saturation = saturation,
             value = value,
             alpha = alpha
@@ -39,8 +39,7 @@ fun sliderSaturationHSVGradient(
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        listOf(
+        colors = listOf(
             Color.hsv(hue = hue, saturation = 0f, value = value, alpha = alpha),
             Color.hsv(hue = hue, saturation = 1f, value = value, alpha = alpha)
         ),
@@ -55,8 +54,7 @@ fun sliderValueGradient(
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        listOf(
+        colors = listOf(
             Color.hsv(hue = hue, saturation = 1f, value = 0f, alpha = alpha),
             Color.hsv(hue = hue, saturation = 1f, value = 1f, alpha = alpha)
         ),
@@ -148,8 +146,7 @@ fun sliderLightnessGradient3Stops(
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        listOf(
+        colors = listOf(
             Color.hsl(hue = hue, saturation = 1f, lightness = 0f, alpha = alpha),
             Color.hsl(hue = hue, saturation = 1f, lightness = .5f, alpha = alpha),
             Color.hsl(hue = hue, saturation = 1f, lightness = 1f, alpha = alpha)
@@ -166,8 +163,7 @@ fun sliderAlphaHSLGradient(
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        listOf(
+        colors = listOf(
             Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = 0f),
             Color.hsl(hue = hue, saturation = saturation, lightness = lightness, alpha = 1f)
         ),
@@ -184,8 +180,7 @@ fun sliderRedGradient(
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        listOf(
+        colors = listOf(
             Color.hsl(hue = 0f, saturation = 1f, lightness = 0f, alpha = alpha),
             Color.hsl(hue = 0f, saturation = 1f, lightness = .5f, alpha = alpha)
         ),
@@ -214,8 +209,7 @@ fun sliderBlueGradient(
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        listOf(
+        colors = listOf(
             Color.hsl(hue = 240f, saturation = 1f, lightness = 0f, alpha = alpha),
             Color.hsl(hue = 240f, saturation = 1f, lightness = .5f, alpha = alpha)
         ),
@@ -223,18 +217,15 @@ fun sliderBlueGradient(
         end = end
     )
 
-fun sliderAlphaRGBGradient(
-    red: Float,
-    green: Float,
-    blue: Float,
+internal fun sliderAlphaRGBGradient(
+    color: ColorRGB,
     start: Offset = Offset.Zero,
     end: Offset = Offset.Infinite
 ): Brush =
     Brush.linearGradient(
-        colors =
-        listOf(
-            Color(red, green, blue, 0f),
-            Color(red, green, blue, 1f)
+        colors = listOf(
+            color.color.copy(alpha = 0f),
+            color.color.copy(alpha = 1f)
         ),
         start = start,
         end = end

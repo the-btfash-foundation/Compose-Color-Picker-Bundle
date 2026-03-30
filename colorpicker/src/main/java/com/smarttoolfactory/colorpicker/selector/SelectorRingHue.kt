@@ -71,8 +71,6 @@ fun SelectorRingHue(
         // Border stroke width for inner and outer radius positions
         val borderStrokeWidthPx = borderStrokeWidth.toPx().coerceAtMost(radiusInner * .2f)
 
-        val coerced = hue.coerceIn(0f, 360f)
-
         /**
          * Circle selector radius for setting **angle** which sets hue
          */
@@ -121,7 +119,7 @@ fun SelectorRingHue(
             borderStrokeColor = borderStrokeColor,
             borderStrokeWidth = borderStrokeWidthPx,
             selectorRadius = selectorRadius,
-            degrees = coerced
+            degrees = hue.coerceIn(0f, 360f)
         )
     }
 }
