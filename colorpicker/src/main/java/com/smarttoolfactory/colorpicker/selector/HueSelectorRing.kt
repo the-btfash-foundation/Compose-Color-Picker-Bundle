@@ -103,33 +103,28 @@ private fun Modifier.hueSelectorInput(
     onChange: (Float) -> Unit
 ): Modifier =
     pointerInput(properties, density, onChange) {
-        var isTouched = false
-
-        fun updateHue(position: Offset) {
-            val geometry = properties.toGeometry(size.toSize(), density)
-            if (position in geometry) {
-                onChange(calculateAngleFromLocalCoordinates(geometry.center, position))
-            }
-        }
+        var gestureGeometry: SelectorRingGeometry? = null
 
         detectMotionEvents(
             onDown = {
                 val geometry = properties.toGeometry(size.toSize(), density)
-                isTouched = it.position in geometry
-                if (isTouched) {
+                if (it.position in geometry) {
+                    gestureGeometry = geometry
                     onChange(calculateAngleFromLocalCoordinates(geometry.center, it.position))
                     it.consume()
                 }
             },
             onMove = {
-                if (isTouched) {
-                    updateHue(it.position)
+                gestureGeometry?.let { geometry ->
+                    onChange(calculateAngleFromLocalCoordinates(geometry.center, it.position))
                     it.consume()
                 }
             },
             onUp = {
-                if (isTouched) it.consume()
-                isTouched = false
+                if (gestureGeometry != null) {
+                    it.consume()
+                    gestureGeometry = null
+                }
             },
             delayAfterDownInMillis = 20
         )
