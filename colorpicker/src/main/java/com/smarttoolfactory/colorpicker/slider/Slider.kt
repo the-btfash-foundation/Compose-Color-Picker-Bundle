@@ -305,46 +305,48 @@ internal fun SliderRGBA(
     )
 }
 
-internal fun onColorChangeCallback(onChange: (Color) -> Unit): (ColorRGB) -> Unit {
-    return {
-        onChange(it.color)
-    }
-}
-
 @Composable
 fun SliderRedRGBA(
     modifier: Modifier = Modifier,
-    color: Color,
-    onColorChange: (Color) -> Unit,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
+    onValueChange: (Float) -> Unit,
 ) {
-    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Red, modifier, onColorChangeCallback(onColorChange))
+    SliderRGBA(ColorRGB(red = value), RGBAChannel.Red, modifier) {
+        onValueChange(it.red)
+    }
 }
 
 @Composable
 fun SliderGreenRGBA(
     modifier: Modifier = Modifier,
-    color: Color,
-    onColorChange: (Color) -> Unit,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
+    onValueChange: (Float) -> Unit,
 ) {
-    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Green, modifier, onColorChangeCallback(onColorChange))
+    SliderRGBA(ColorRGB(green = value), RGBAChannel.Green, modifier) {
+        onValueChange(it.green)
+    }
 }
 
 @Composable
 fun SliderBlueRGBA(
     modifier: Modifier = Modifier,
-    color: Color,
-    onColorChange: (Color) -> Unit,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
+    onValueChange: (Float) -> Unit,
 ) {
-    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Blue, modifier, onColorChangeCallback(onColorChange))
+    SliderRGBA(ColorRGB(blue = value), RGBAChannel.Blue, modifier) {
+        onValueChange(it.blue)
+    }
 }
 
 @Composable
 fun SliderAlphaRGBA(
     modifier: Modifier = Modifier,
-    color: Color,
-    onColorChange: (Color) -> Unit,
+    @FloatRange(from = 0.0, to = 1.0) value: Float,
+    onValueChange: (Float) -> Unit,
 ) {
-    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Alpha, modifier, onColorChangeCallback(onColorChange))
+    SliderRGBA(ColorRGB(alpha = value), RGBAChannel.Alpha, modifier) {
+        onValueChange(it.alpha)
+    }
 }
 
 
