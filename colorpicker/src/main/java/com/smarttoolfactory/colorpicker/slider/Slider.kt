@@ -301,6 +301,49 @@ internal fun SliderRGBA(
     )
 }
 
+internal fun onColorChangeCallback(onChange: (Color) -> Unit): (ColorRGB) -> Unit {
+    return {
+        onChange(it.color)
+    }
+}
+
+@Composable
+fun SliderRedRGBA(
+    modifier: Modifier = Modifier,
+    color: Color,
+    onColorChange: (Color) -> Unit,
+) {
+    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Red, modifier, onColorChangeCallback(onColorChange))
+}
+
+@Composable
+fun SliderGreenRGBA(
+    modifier: Modifier = Modifier,
+    color: Color,
+    onColorChange: (Color) -> Unit,
+) {
+    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Green, modifier, onColorChangeCallback(onColorChange))
+}
+
+@Composable
+fun SliderBlueRGBA(
+    modifier: Modifier = Modifier,
+    color: Color,
+    onColorChange: (Color) -> Unit,
+) {
+    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Blue, modifier, onColorChangeCallback(onColorChange))
+}
+
+@Composable
+fun SliderAlphaRGBA(
+    modifier: Modifier = Modifier,
+    color: Color,
+    onColorChange: (Color) -> Unit,
+) {
+    SliderRGBA(ColorRGB(color.red, color.green, color.blue, color.alpha), RGBAChannel.Alpha, modifier, onColorChangeCallback(onColorChange))
+}
+
+
 @Preview
 @Composable
 private fun RGBASliderPrev() {
