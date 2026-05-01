@@ -343,8 +343,9 @@ fun SliderAlphaRGBA(
     modifier: Modifier = Modifier,
     @FloatRange(from = 0.0, to = 1.0) value: Float,
     onValueChange: (Float) -> Unit,
+    displayColor: Color,
 ) {
-    SliderRGBA(ColorRGB(alpha = value), RGBAChannel.Alpha, modifier) {
+    SliderRGBA(ColorRGB(displayColor.red, displayColor.green, displayColor.blue, alpha = value), RGBAChannel.Alpha, modifier) {
         onValueChange(it.alpha)
     }
 }
